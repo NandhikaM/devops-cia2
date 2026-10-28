@@ -1,0 +1,15 @@
+- name: Deploy cicd-demo to AKS
+  hosts: local
+  gather_facts: false
+  vars:
+    image: "{{ lookup('env', 'IMAGE_TAG') }}"
+  tasks:
+    - name: Apply Service
+      ansible.builtin.command: kubectl apply -f k8s/service.yaml
+
+    - name: Apply Deployment with the new image tag
+      ansible.builtin.shell: |
+        sed "s|IMAGE_PLACEHOLDER|{{ image }}|" k8s/deployment.yaml | kubectl apply -f -
+
+    - name: Wait for rollout to finish
+      ansible.builtin.command: kubectl rollout status deployment/cicd-demo --timeout=180s
