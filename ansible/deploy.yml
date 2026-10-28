@@ -3,13 +3,20 @@
   gather_facts: false
   vars:
     image: "{{ lookup('env', 'IMAGE_TAG') }}"
+    repo_root: "{{ playbook_dir }}/.."
   tasks:
     - name: Apply Service
       ansible.builtin.command: kubectl apply -f k8s/service.yaml
+      args:
+        chdir: "{{ repo_root }}"
 
     - name: Apply Deployment with the new image tag
       ansible.builtin.shell: |
         sed "s|IMAGE_PLACEHOLDER|{{ image }}|" k8s/deployment.yaml | kubectl apply -f -
+      args:
+        chdir: "{{ repo_root }}"
 
     - name: Wait for rollout to finish
       ansible.builtin.command: kubectl rollout status deployment/cicd-demo --timeout=180s
+      args:
+        chdir: "{{ repo_root }}"
