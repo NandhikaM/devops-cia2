@@ -5,6 +5,11 @@
     image: "{{ lookup('env', 'IMAGE_TAG') }}"
     repo_root: "{{ playbook_dir }}/.."
   tasks:
+    - name: Apply ConfigMap
+      ansible.builtin.command: kubectl apply -f k8s/configmap.yaml
+      args:
+        chdir: "{{ repo_root }}"
+
     - name: Apply Service
       ansible.builtin.command: kubectl apply -f k8s/service.yaml
       args:

@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 
 class HelloControllerTest {
     @Test
-    void homeReturnsDemoPage() {
-        assertTrue(new HelloController().home().contains("CI/CD Demo"));
+    void homeShowsTitleAndConfigMessage() {
+        String page = new HelloController("test message").home();
+        assertTrue(page.contains("CI/CD Demo"));
+        assertTrue(page.contains("test message"));
     }
 }

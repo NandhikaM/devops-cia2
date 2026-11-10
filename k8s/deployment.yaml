@@ -17,6 +17,12 @@ spec:
           image: IMAGE_PLACEHOLDER
           ports:
             - containerPort: 8080
+          env:
+            - name: APP_MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: cicd-demo-config
+                  key: APP_MESSAGE
           readinessProbe:
             httpGet: { path: /actuator/health, port: 8080 }
             initialDelaySeconds: 20
